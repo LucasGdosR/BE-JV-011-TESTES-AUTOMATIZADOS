@@ -1,5 +1,6 @@
 package tech.ada.testesautomatizados.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -29,7 +30,7 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> save(@RequestBody Book book, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<Book> save(@RequestBody @Valid Book book, UriComponentsBuilder uriBuilder) {
 
         URI uri = uriBuilder
                 .path("api/usuarios/{id}")
@@ -41,7 +42,7 @@ public class BookController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Book> editById(@PathVariable String id,
-                                         @RequestBody Book book) {
+                                         @RequestBody @Valid Book book) {
 
         return ResponseEntity.ok(service.editById(id, book));
     }
