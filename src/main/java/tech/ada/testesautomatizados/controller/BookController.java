@@ -38,4 +38,11 @@ public class BookController {
 
         return ResponseEntity.created(uri).body(service.save(book));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Book> editById(@PathVariable String id,
+                                         @RequestBody Book book) {
+
+        return ResponseEntity.ok(service.editById(id, book));
+    }
 }

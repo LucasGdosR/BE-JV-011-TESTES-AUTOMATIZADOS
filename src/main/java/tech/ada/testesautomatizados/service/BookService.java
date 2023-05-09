@@ -18,4 +18,8 @@ public class BookService {
     public Book save(Book book) {
         return null;
     }
+
+    public Book editById(String id, Book book) {
+        return null;
+    }
 }
