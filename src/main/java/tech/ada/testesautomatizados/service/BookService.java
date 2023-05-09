@@ -22,4 +22,7 @@ public class BookService {
     public Book editById(String id, Book book) {
         return null;
     }
+
+    public void deleteById(String id) {
+    }
 }

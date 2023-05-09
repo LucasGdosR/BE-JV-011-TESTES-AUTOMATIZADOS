@@ -45,4 +45,12 @@ public class BookController {
 
         return ResponseEntity.ok(service.editById(id, book));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable String id) {
+
+        service.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
