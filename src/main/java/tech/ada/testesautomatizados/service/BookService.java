@@ -10,4 +10,8 @@ public class BookService {
     public List<Book> findAll() {
         return null;
     }
+
+    public Book findById(String id) {
+        return null;
+    }
 }
