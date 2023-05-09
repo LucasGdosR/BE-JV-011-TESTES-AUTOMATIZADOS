@@ -14,4 +14,8 @@ public class BookService {
     public Book findById(String id) {
         return null;
     }
+
+    public Book save(Book book) {
+        return null;
+    }
 }
