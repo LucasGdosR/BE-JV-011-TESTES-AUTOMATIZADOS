@@ -23,7 +23,8 @@ public class Book {
     private String resumo;
     private String summary;
     @NotNull
-    @Min(20)
+    @DecimalMin(value = "20.00")
+    @Digits(integer = 10, fraction = 2)
     private BigDecimal price;
     @NotNull
     @Min(100)
