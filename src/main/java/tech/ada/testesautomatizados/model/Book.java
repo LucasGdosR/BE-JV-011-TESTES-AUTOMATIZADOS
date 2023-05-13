@@ -3,6 +3,7 @@ package tech.ada.testesautomatizados.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Book {
     @Id
     @NotBlank
