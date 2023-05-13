@@ -1,5 +1,6 @@
 package tech.ada.testesautomatizados.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,14 +20,13 @@ import tech.ada.testesautomatizados.service.BookService;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class BookControllerTest {
-
+    private ObjectMapper mapper;
     @InjectMocks
     private BookController controller;
     @Mock
@@ -38,7 +39,7 @@ class BookControllerTest {
     @BeforeEach
     void setUp() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-
+        this.mapper = new ObjectMapper();
         mockBook1 = new Book();
         mockBook1.setIsbn("123-456");
         mockBook1.setTitle("Mock Book");
@@ -115,6 +116,26 @@ class BookControllerTest {
 
         mockMvc.perform(delete("/api/books/foo"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturn404WhenEditingInexistentId() throws Exception {
+        Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid ISBN."))
+                .when(service).editById("foo", mockBook2);
+        String mockBook2Json = mapper.writeValueAsString(mockBook2);
+
+        mockMvc.perform(put("/api/books/foo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mockBook2Json))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturn400WhenEditingInfoIsInvalidOrIncomplete() throws Exception {
+        mockMvc.perform(put("/api/books/123-456")
+                        .contentType("application/json")
+                        .content("{ \"title\": \"\", \"price\": 100}"))
+                .andExpect(status().isBadRequest());
     }
 
 }
