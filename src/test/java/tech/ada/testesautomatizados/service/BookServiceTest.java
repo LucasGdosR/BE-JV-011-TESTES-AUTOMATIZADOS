@@ -109,4 +109,22 @@ class BookServiceTest {
         when(repository.findById(mockBook1.getIsbn())).thenReturn(Optional.of(mockBook1));
         assertThrows(ResponseStatusException.class, () -> service.save(mockBook1));
     }
+
+    /*
+    PUT -> editById(id, updatedBook)
+     */
+    @Test
+    void shouldReturnUpdatedBookWithPathId() {
+        when(repository.save(mockBook1)).thenReturn(mockBook1);
+        when(repository.findById(mockBook1.getIsbn())).thenReturn(Optional.of(mockBook1));
+
+        assertEquals(mockBook1, service.editById(mockBook1.getIsbn(), mockBook1));
+    }
+
+    @Test
+    void shouldThrowExcecptionIfInexistentId() {
+        when(repository.findById(mockBook1.getIsbn())).thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () -> service.editById(mockBook1.getIsbn(), mockBook1));
+    }
 }
