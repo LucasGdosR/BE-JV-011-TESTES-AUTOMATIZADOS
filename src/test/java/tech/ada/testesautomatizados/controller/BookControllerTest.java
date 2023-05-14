@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class BookControllerTest {
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper = new ObjectMapper();
     @InjectMocks
     private BookController controller;
     @Mock
@@ -39,7 +39,6 @@ class BookControllerTest {
     @BeforeEach
     void setUp() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-        this.mapper = new ObjectMapper();
         mockBook1 = new Book();
         mockBook1.setIsbn("123-456");
         mockBook1.setTitle("Mock Book");
