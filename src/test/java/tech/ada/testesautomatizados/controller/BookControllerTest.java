@@ -21,8 +21,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @ExtendWith(MockitoExtension.class)
 class BookControllerTest {
@@ -113,12 +113,14 @@ class BookControllerTest {
 
         Mockito.when(service.save(Mockito.any(Book.class))).thenReturn(book);
 
-        String book2Json = mapper.writeValueAsString(book);
+        String bookJson = mapper.writeValueAsString(book);
 
         mockMvc.perform(post("/api/books")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(book2Json))
-                .andExpect(status().isCreated());
+                        .content(bookJson))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(bookJson))
+                .andExpect(redirectedUrl("http://localhost/api/books/"+book.getIsbn()));
     }
     @Test
     void shouldReturn400IfBookIsInvalidOrIncomplete() throws Exception {
