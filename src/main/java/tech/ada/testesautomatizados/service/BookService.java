@@ -34,6 +34,7 @@ public class BookService {
 
     public Book editById(String id, Book updatedBook) throws ResponseStatusException {
         findById(id);
+        updatedBook.setIsbn(id);
         return repository.save(updatedBook);
     }
 

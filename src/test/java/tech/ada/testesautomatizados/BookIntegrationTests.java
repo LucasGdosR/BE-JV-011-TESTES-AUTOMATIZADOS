@@ -79,13 +79,14 @@ public class BookIntegrationTests {
         book.setPrice(BigDecimal.valueOf(20.00));
         book.setNumberOfPages(100);
 
+        book2.setIsbn(id);
         book2.setTitle("Mock Book 2");
         book2.setResumo("Resumo do livro 2");
         book2.setPrice(BigDecimal.valueOf(20.00));
         book2.setNumberOfPages(100);
 
         String bookJson = mapper.writeValueAsString(book);
-        String bookJson2 = mapper.writeValueAsString(book);
+        String bookJson2 = mapper.writeValueAsString(book2);
 
         mockMvc.perform(post("/api/books")
                         .contentType(MediaType.APPLICATION_JSON)
