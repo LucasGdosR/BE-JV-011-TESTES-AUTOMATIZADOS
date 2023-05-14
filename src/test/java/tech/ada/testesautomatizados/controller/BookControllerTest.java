@@ -18,6 +18,7 @@ import tech.ada.testesautomatizados.model.Book;
 import tech.ada.testesautomatizados.service.BookService;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -123,7 +124,7 @@ class BookControllerTest {
                 .andExpect(redirectedUrl("http://localhost/api/books/"+book.getIsbn()));
     }
     @Test
-    void shouldReturn400IfBookIsInvalidOrIncomplete() throws Exception {
+    void shouldReturn400WhenBookIsInvalidOrIncomplete() throws Exception {
         Book book = new Book();
         book.setIsbn("123-456-7");
         book.setTitle("New Book");
@@ -138,6 +139,112 @@ class BookControllerTest {
                         .content(book2Json))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void shouldReturn400WhenIsbnIsBlank() throws Exception {
+        mockBook1.setIsbn("");
+        String mockBookJson = mapper.writeValueAsString(mockBook1);
+
+        mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockBookJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn400WhenTitleIsBlank() throws Exception {
+        mockBook1.setTitle("");
+        String mockBookJson = mapper.writeValueAsString(mockBook1);
+
+        mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockBookJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn400WhenResumoIsBlank() throws Exception {
+        mockBook1.setResumo("");
+        String mockBookJson = mapper.writeValueAsString(mockBook1);
+
+        mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockBookJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn400WhenResumoGreaterThan500() throws Exception {
+        String resumo = "a";
+        for (int i = 0; i < 501; i++)
+            resumo += "a";
+        mockBook1.setResumo(resumo);
+        String mockBookJson = mapper.writeValueAsString(mockBook1);
+
+        mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockBookJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn400WhenPriceLesserThan20() throws Exception {
+        mockBook1.setPrice(BigDecimal.valueOf(19.99));
+        String mockBookJson = mapper.writeValueAsString(mockBook1);
+
+        mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockBookJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn400WhenPriceHasMoreThan2DecimalPlaces() throws Exception {
+        mockBook1.setPrice(BigDecimal.valueOf(20.001));
+        String mockBookJson = mapper.writeValueAsString(mockBook1);
+
+        mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockBookJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn400WhenLessThan100Pages() throws Exception {
+        mockBook1.setNumberOfPages(99);
+        String mockBookJson = mapper.writeValueAsString(mockBook1);
+
+        mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockBookJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn400WhenPublishingInThePastOrPresent() throws Exception {
+        mockBook1.setPublishingDate(new Date());
+        String mockBookJson = mapper.writeValueAsString(mockBook1);
+
+        mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockBookJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn201WhenPublishingInTheFuture() throws Exception {
+        Date nextYear = new Date();
+        nextYear.setYear(nextYear.getYear() + 1);
+        mockBook1.setPublishingDate(nextYear);
+        String mockBookJson = mapper.writeValueAsString(mockBook1);
+
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mockBookJson)
+                        .characterEncoding("utf-8"))
+                .andExpect(status().isCreated());
+    }
+
     /*
     DELETE -> deleteById()
      */
