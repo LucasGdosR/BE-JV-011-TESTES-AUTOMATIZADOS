@@ -96,17 +96,17 @@ public class BookIntegrationTests {
                 .andExpect(content().json(bookJson))
                 .andExpect(redirectedUrl("http://localhost/api/books/"+id));
 
-        mockMvc.perform(get("/api/books"))
+        mockMvc.perform(get("/api/books/"+id))
                 .andExpect(status().isOk())
-                .andExpect(content().json("["+bookJson+"]"));
+                .andExpect(content().json(bookJson));
 
         mockMvc.perform(put("/api/books/"+id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(bookJson2))
                 .andExpect(status().isOk());
 
-       mockMvc.perform(get("/api/books"))
+       mockMvc.perform(get("/api/books/"+id))
                 .andExpect(status().isOk())
-                .andExpect(content().json("["+bookJson2+"]"));
+                .andExpect(content().json(bookJson2));
     }
 }
