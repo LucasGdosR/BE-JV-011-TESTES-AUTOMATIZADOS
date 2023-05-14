@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -21,7 +21,7 @@ public class Book {
     @NotBlank
     private String title;
     @NotBlank
-    @Size(max = 500)
+    @Size(max = 501)
     private String resumo;
     private String summary;
     @NotNull
@@ -32,5 +32,5 @@ public class Book {
     @Min(100)
     private Integer numberOfPages;
     @Future
-    private LocalDate publishingDate;
+    private Date publishingDate;
 }
