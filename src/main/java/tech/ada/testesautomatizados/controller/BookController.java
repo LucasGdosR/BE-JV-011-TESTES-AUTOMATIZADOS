@@ -33,7 +33,7 @@ public class BookController {
     public ResponseEntity<Book> save(@RequestBody @Valid Book book, UriComponentsBuilder uriBuilder) {
 
         URI uri = uriBuilder
-                .path("api/usuarios/{id}")
+                .path("api/books/{id}")
                 .buildAndExpand(book.getIsbn())
                 .toUri();
 
