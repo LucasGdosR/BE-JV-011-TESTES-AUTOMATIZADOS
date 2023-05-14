@@ -99,7 +99,43 @@ class BookControllerTest {
         mockMvc.perform(get("/api/books/foo"))
                 .andExpect(status().isNotFound());
     }
+    /*
+    POST -> save()
+     */
+    @Test
+    void shouldCreateBook() throws Exception {
+        Book book = new Book();
+        book.setIsbn("123-456-7");
+        book.setTitle("New Book");
+        book.setResumo("Resumo do novo livro");
+        book.setPrice(BigDecimal.valueOf(20.00));
+        book.setNumberOfPages(200);
 
+        Mockito.when(service.save(Mockito.any(Book.class))).thenReturn(book);
+
+        String book2Json = mapper.writeValueAsString(book);
+
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(book2Json))
+                .andExpect(status().isCreated());
+    }
+    @Test
+    void shouldReturn400IfBookIsInvalidOrIncomplete() throws Exception {
+        Book book = new Book();
+        book.setIsbn("123-456-7");
+        book.setTitle("New Book");
+        book.setResumo("Resumo do novo livro");
+        book.setPrice(BigDecimal.valueOf(10.00));
+        book.setNumberOfPages(200);
+
+        String book2Json = mapper.writeValueAsString(book);
+
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(book2Json))
+                .andExpect(status().isBadRequest());
+    }
     /*
     DELETE -> deleteById()
      */
@@ -116,7 +152,9 @@ class BookControllerTest {
         mockMvc.perform(delete("/api/books/foo"))
                 .andExpect(status().isNotFound());
     }
-
+    /*
+    PUT -> editById()
+     */
     @Test
     void shouldReturn404WhenEditingInexistentId() throws Exception {
         Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid ISBN."))

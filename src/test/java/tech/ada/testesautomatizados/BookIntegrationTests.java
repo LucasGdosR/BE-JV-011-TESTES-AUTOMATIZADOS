@@ -64,4 +64,48 @@ public class BookIntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
+    @Test
+    @DisplayName("Should add a book, and then edit it.")
+    void shouldSaveThenEdit() throws Exception {
+        Book book = new Book();
+        Book book2;
+        book2 = new Book();
+
+        String id = "123-456";
+
+        book.setIsbn(id);
+        book.setTitle("Mock Book");
+        book.setResumo("Resumo do livro");
+        book.setPrice(BigDecimal.valueOf(20.00));
+        book.setNumberOfPages(100);
+
+        book2.setTitle("Mock Book 2");
+        book2.setResumo("Resumo do livro 2");
+        book2.setPrice(BigDecimal.valueOf(20.00));
+        book2.setNumberOfPages(100);
+
+        String bookJson = mapper.writeValueAsString(book);
+        String bookJson2 = mapper.writeValueAsString(book);
+
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(bookJson))
+                .andExpect(redirectedUrl("http://localhost/api/books/"+id));
+
+        mockMvc.perform(get("/api/books"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("["+bookJson+"]"));
+
+        mockMvc.perform(put("/api/books/"+id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookJson2))
+                .andExpect(status().isOk());
+
+       mockMvc.perform(get("/api/books"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("["+bookJson2+"]"));
+    }
 }
