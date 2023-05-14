@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 import tech.ada.testesautomatizados.model.Book;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceTest {
@@ -50,7 +50,7 @@ class BookServiceTest {
     @Test
     void shouldFindAllBooksInRepository() {
         List<Book> expectedBooks = List.of(mockBook1, mockBook2);
-        Mockito.when(repository.findAll()).thenReturn(expectedBooks);
+        when(repository.findAll()).thenReturn(expectedBooks);
 
         List<Book> receivedBooks = service.findAll();
 
@@ -72,8 +72,8 @@ class BookServiceTest {
      */
     @Test
     void shouldFindBookById() {
-        Mockito.when(repository.findById("123-456")).thenReturn(Optional.of(mockBook1));
-        Mockito.when(repository.findById("123-456-2")).thenReturn(Optional.of(mockBook2));
+        when(repository.findById("123-456")).thenReturn(Optional.of(mockBook1));
+        when(repository.findById("123-456-2")).thenReturn(Optional.of(mockBook2));
 
         Book receivedBook1 = service.findById("123-456");
         Book receivedBook2 = service.findById("123-456-2");
@@ -93,5 +93,20 @@ class BookServiceTest {
     @Test
     void shouldThrowExceptionWhenDeletingInexistentId() {
         assertThrows(ResponseStatusException.class, () -> service.deleteById("foo"));
+    }
+
+    /*
+    POST -> save()
+     */
+    @Test
+    void shouldReturnSavedBook() {
+        when(repository.save(mockBook1)).thenReturn(mockBook1);
+        assertEquals(mockBook1, service.save(mockBook1));
+    }
+
+    @Test
+    void shouldThrowExceptionIfIdAlreadyExists() {
+        when(repository.findById(mockBook1.getIsbn())).thenReturn(Optional.of(mockBook1));
+        assertThrows(ResponseStatusException.class, () -> service.save(mockBook1));
     }
 }
