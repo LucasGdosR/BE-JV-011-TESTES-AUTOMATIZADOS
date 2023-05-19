@@ -64,7 +64,7 @@ public class SeleniumTest {
         isbnInput.sendKeys("123");
         titleInput.sendKeys("book test");
         resumoInput.sendKeys("resumo test");
-        priceInput.sendKeys("30.00");
+        priceInput.sendKeys("3000");
         numberOfPagesInput.sendKeys("300");
 
         saveBtn.click();
@@ -75,7 +75,6 @@ public class SeleniumTest {
     @Test
     public void testEditBook() {
         driver.get(path);
-        WebElement editBookIdInput = driver.findElement(By.id("editBookId"));
         WebElement editIsbnInput = driver.findElement(By.id("editIsbn"));
         WebElement editTitleInput = driver.findElement(By.id("editTitle"));
         WebElement editResumoInput = driver.findElement(By.id("editResumo"));
@@ -86,15 +85,17 @@ public class SeleniumTest {
         WebElement editBtn = driver.findElement(By.id("editBtn"));
         WebElement editedBook = driver.findElement(By.id("editedBook"));
 
-        editBookIdInput.sendKeys("123");
-        editIsbnInput.sendKeys("9876543210");
+        editIsbnInput.sendKeys("123");
         editTitleInput.sendKeys("Updated Book");
+        editResumoInput.sendKeys("Updated Resumo");
+        editPriceInput.sendKeys("3000");
+        editNumberOfPagesInput.sendKeys("300");
 
 
         editBtn.click();
 
 
-        assertEquals("Book edited: ID: 123, Title: Updated Book", editedBook.getText());
+        assertEquals("ISBN: 123, Title: Updated Book", editedBook.getText());
     }
 
     @Test
