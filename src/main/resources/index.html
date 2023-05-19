@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="./stye.css">
+    <link rel="stylesheet" href="./style.css">
     <title>Livraria</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -63,7 +63,7 @@
                     data: JSON.stringify(book),
                     contentType: "application/json",
                     success: function(data) {
-                        $("#editedBook").text("Book edited: ID: " + data.id + ", Title: " + data.title);
+                        $("#editedBook").text("Book edited: ID: " + data.isbn + ", Title: " + data.title);
                     }
                 });
             });
