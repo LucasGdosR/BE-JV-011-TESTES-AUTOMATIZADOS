@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="./stye.css">
+    <title>Livraria</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // List all books
+            $.get("http://localhost:8080/api/books", function(data) {
+                var books = data;
+                var table = $("#bookTable");
+                $.each(books, function(index, book) {
+                    var row = $("<tr><td>" + book.isbn + "</td><td>" + book.title + "</td><td>" + "R$ "+book.price + "</td><td>" + book.numberOfPages + "</td></tr>" );
+                    table.append(row);
+                });
+            });
+
+            // Get book by ID
+            $("#findByIdBtn").click(function() {
+                var id = $("#bookId").val();
+                $.get("http://localhost:8080/api/books/" + id, function(data) {
+                    var book = data;
+                    $("#foundBook").text("ID: " + book.id + ", Title: " + book.title);
+                });
+            });
+
+            // Save a book
+            $("#saveBtn").click(function() {
+                var book = {
+                    isbn: $("#isbn").val(),
+                    title: $("#title").val(),
+                    resumo: $("#resumo").val(),
+                    price: parseFloat($("#price").val()),
+                    numberOfPages: parseInt($("#numberOfPages").val()),
+                    publishingDate: $("#publishingDate").val()
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/api/books",
+                    data: JSON.stringify(book),
+                    contentType: "application/json",
+                    success: function(data, textStatus, xhr) {
+                        $("#savedBook").text("Livro adicionado");
+                    }
+                });
+            });
+
+            // Edit a book
+            $("#editBtn").click(function() {
+                var id = $("#editIsbn").val();
+                var book = {
+                    isbn: $("#editIsbn").val(),
+                    title: $("#editTitle").val(),
+                    resumo: $("#editResumo").val(),
+                    price: parseFloat($("#editPrice").val()),
+                    numberOfPages: parseInt($("#editNumberOfPages").val()),
+                    publishingDate: $("#editPublishingDate").val()
+                };
+                $.ajax({
+                    type: "PUT",
+                    url: "http://localhost:8080/api/books/" + id,
+                    data: JSON.stringify(book),
+                    contentType: "application/json",
+                    success: function(data) {
+                        $("#editedBook").text("Book edited: ID: " + data.id + ", Title: " + data.title);
+                    }
+                });
+            });
+
+            // Delete a book
+            $("#deleteBtn").click(function() {
+                var id = $("#deleteBookId").val();
+                $.ajax({
+                    type: "DELETE",
+                    url: "http://localhost:8080/api/books/" + id,
+                    success: function() {
+                        $("#deletedBook").text("Livro Excluído ISBN: " + id);
+                    }
+                });
+            });
+        });
+    </script>
+<body>
+    <h1>Livraria</h1>
+
+    <h2>Lista de Livros</h2>
+    <table id="bookTable">
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Preço</th>
+            <th>Páginas</th>
+        </tr>
+    </table>
+
+   <div class = "vertical">
+    <div class="horizontal-container">
+        <div class="find">
+            <h2>Encontrar Livro por ID</h2>
+            <input type="text" id="bookId" placeholder="Digite o ID do livro">
+            <button id="findByIdBtn">Encontrar</button>
+            <p id="foundBook"></p>
+        </div>
+
+        <div class="delete">
+            <h2>Excluir um Livro</h2>
+            <input type="text" id="deleteBookId" placeholder="Digite o ID do livro">
+            <button id="deleteBtn">Excluir</button>
+            <p id="deletedBook"></p>
+        </div>
+    </div>
+
+    <div class="horizontal-container">
+        <div class="save">
+            <h2>Adicionar um Livro</h2>
+            <label for="isbn">ISBN:</label>
+            <input type="text" id="isbn" placeholder="Digite o ISBN do livro"><br>
+            <label for="title">Título:</label>
+            <input type="text" id="title" placeholder="Digite o título do livro"><br>
+            <label for="resumo">Resumo:</label>
+            <input type="text" id="resumo" placeholder="Digite o resumo do livro"><br>
+            <label for="price">Preço:</label>
+            <input type="text" id="price" placeholder="Digite o preço do livro"><br>
+            <label for="numberOfPages">Número de Páginas:</label>
+            <input type="text" id="numberOfPages" placeholder="Digite o número de páginas"><br>
+            <button id="saveBtn">Salvar</button>
+            <p id="savedBook"></p>
+        </div>
+
+        <div class="edit">
+            <h2>Editar um Livro</h2>
+            <label for="editIsbn">ISBN:</label>
+            <input type="text" id="editIsbn" placeholder="Digite o ISBN do livro"><br>
+            <label for="editTitle">Título:</label>
+            <input type="text" id="editTitle" placeholder="Digite o título do livro"><br>
+            <label for="editResumo">Resumo:</label>
+            <input type="text" id="editResumo" placeholder="Digite o resumo do livro"><br>
+            <label for="editPrice">Preço:</label>
+            <input type="text" id="editPrice" placeholder="Digite o preço do livro"><br>
+            <label for="editNumberOfPages">Número de Páginas:</label>
+            <input type="text" id="editNumberOfPages" placeholder="Digite o número de páginas"><br>
+            <label for="editPublishingDate">Data de Publicação:</label>
+            <input type="date" id="editPublishingDate"><br>
+            <button id="editBtn">Editar</button>
+            <p id="editedBook"></p>
+        </div>   
+   </div>
+</div>
+</body>
+</html>
+
