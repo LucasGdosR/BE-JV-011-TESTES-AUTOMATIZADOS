@@ -21,7 +21,7 @@
                 var id = $("#bookId").val();
                 $.get("http://localhost:8080/api/books/" + id, function(data) {
                     var book = data;
-                    $("#foundBook").text("ID: " + book.id + ", Title: " + book.title);
+                    $("#foundBook").text("ISBN: " + book.isbn + ", Title: " + book.title);
                 });
             });
 

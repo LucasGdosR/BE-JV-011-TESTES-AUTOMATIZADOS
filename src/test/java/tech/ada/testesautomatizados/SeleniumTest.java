@@ -30,7 +30,7 @@ public class SeleniumTest {
     @Test
     public void testListAllBooks() {
         driver.get(path);
-        WebElement table = driver.findElement(By.id("booktable"));
+        WebElement table = driver.findElement(By.id("bookTable"));
         // Assert the table contains the expected number of rows and columns
         assertEquals(1, table.findElements(By.tagName("tr")).size());
     }
@@ -46,7 +46,7 @@ public class SeleniumTest {
         findByIdBtn.click();
 
 
-        assertEquals("ID: 123, Title: Book Title", foundBook.getText());
+        assertEquals("ISBN: 123, Title: book test", foundBook.getText());
     }
 
     @Test
@@ -54,17 +54,22 @@ public class SeleniumTest {
         driver.get(path);
         WebElement isbnInput = driver.findElement(By.id("isbn"));
         WebElement titleInput = driver.findElement(By.id("title"));
+        WebElement resumoInput = driver.findElement(By.id("resumo"));
+        WebElement priceInput = driver.findElement(By.id("price"));
+        WebElement numberOfPagesInput = driver.findElement(By.id("numberOfPages"));
+
         WebElement saveBtn = driver.findElement(By.id("saveBtn"));
         WebElement savedBook = driver.findElement(By.id("savedBook"));
 
-        isbnInput.sendKeys("1234567890");
-        titleInput.sendKeys("New Book");
-        // Set other input values if needed
+        isbnInput.sendKeys("123");
+        titleInput.sendKeys("book test");
+        resumoInput.sendKeys("resumo test");
+        priceInput.sendKeys("30.00");
+        numberOfPagesInput.sendKeys("300");
 
         saveBtn.click();
 
-
-        assertEquals("Book saved. Location: /api/books/1", savedBook.getText());
+        assertEquals("Livro adicionado", savedBook.getText());
     }
 
     @Test
@@ -73,13 +78,18 @@ public class SeleniumTest {
         WebElement editBookIdInput = driver.findElement(By.id("editBookId"));
         WebElement editIsbnInput = driver.findElement(By.id("editIsbn"));
         WebElement editTitleInput = driver.findElement(By.id("editTitle"));
+        WebElement editResumoInput = driver.findElement(By.id("editResumo"));
+        WebElement editPriceInput = driver.findElement(By.id("editPrice"));
+        WebElement editNumberOfPagesInput = driver.findElement(By.id("editNumberOfPages"));
+        WebElement editPublishingDateInput = driver.findElement(By.id("editPublishingDate"))
+                ;
         WebElement editBtn = driver.findElement(By.id("editBtn"));
         WebElement editedBook = driver.findElement(By.id("editedBook"));
 
         editBookIdInput.sendKeys("123");
         editIsbnInput.sendKeys("9876543210");
         editTitleInput.sendKeys("Updated Book");
-        // colocar o resto dos valores
+
 
         editBtn.click();
 
@@ -90,8 +100,8 @@ public class SeleniumTest {
     @Test
     public void testDeleteBook() {
         driver.get(path);
-        WebElement deleteBookIdInput = driver.findElement(By.id("Excluir um Livro"));
-        WebElement deleteBtn = driver.findElement(By.id("Excluir"));
+        WebElement deleteBookIdInput = driver.findElement(By.id("deleteBookId"));
+        WebElement deleteBtn = driver.findElement(By.id("deleteBtn"));
         WebElement deletedBook = driver.findElement(By.id("deletedBook"));
 
         deleteBookIdInput.sendKeys("123");
@@ -99,7 +109,9 @@ public class SeleniumTest {
         deleteBtn.click();
 
 
-        assertEquals("Livro Excluído: ID: 123", deletedBook.getText());
+        assertEquals("Livro Excluído ISBN: 123", deletedBook.getText());
+
+
     }
 
 }
