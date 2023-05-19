@@ -11,33 +11,39 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SeleniumTest {
 
     private WebDriver driver;
-    String path = "C:\\Users\\luizs\\IdeaProjects\\BE-JV-011-TESTES-AUTOMATIZADOS\\src\\main\\resources\\index.html";
+    String path = "C:\\Users\\T-GAMER\\IdeaProjects\\testes-automatizados\\src\\main\\resources\\index.html";
     @BeforeEach
     public void setUp() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--remote-allow-origins=*");
-        System.setProperty("webdriver.chrome.driver","F:\\Luizf\\Downloads\\chromedriver_win32\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","D:\\chromedriver_win32\\chromedriver.exe");
         driver = new ChromeDriver(chromeOptions);
+        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(400));
     }
 
-    @AfterEach
-    public void tearDown() {
-        driver.quit();
-    }
+//    @AfterEach
+//    public void tearDown() {
+//        driver.quit();
+//    }
     @Test
+    @Order(2)
     public void testListAllBooks() {
         driver.get(path);
+
         WebElement table = driver.findElement(By.id("bookTable"));
         // Assert the table contains the expected number of rows and columns
-        assertEquals(1, table.findElements(By.tagName("tr")).size());
+        assertEquals(2, table.findElements(By.tagName("tr")).size());
     }
 
     @Test
+    @Order(3)
     public void testFindBookById() {
         driver.get(path);
+
         WebElement bookIdInput = driver.findElement(By.id("bookId"));
         WebElement findByIdBtn = driver.findElement(By.id("findByIdBtn"));
         WebElement foundBook = driver.findElement(By.id("foundBook"));
@@ -45,13 +51,14 @@ public class SeleniumTest {
         bookIdInput.sendKeys("123");
         findByIdBtn.click();
 
-
         assertEquals("ISBN: 123, Title: book test", foundBook.getText());
     }
 
     @Test
+    @Order(1)
     public void testSaveBook() {
         driver.get(path);
+
         WebElement isbnInput = driver.findElement(By.id("isbn"));
         WebElement titleInput = driver.findElement(By.id("title"));
         WebElement resumoInput = driver.findElement(By.id("resumo"));
@@ -73,15 +80,17 @@ public class SeleniumTest {
     }
 
     @Test
+    @Order(4)
     public void testEditBook() {
         driver.get(path);
+
         WebElement editIsbnInput = driver.findElement(By.id("editIsbn"));
         WebElement editTitleInput = driver.findElement(By.id("editTitle"));
         WebElement editResumoInput = driver.findElement(By.id("editResumo"));
         WebElement editPriceInput = driver.findElement(By.id("editPrice"));
         WebElement editNumberOfPagesInput = driver.findElement(By.id("editNumberOfPages"));
-        WebElement editPublishingDateInput = driver.findElement(By.id("editPublishingDate"))
-                ;
+        WebElement editPublishingDateInput = driver.findElement(By.id("editPublishingDate"));
+
         WebElement editBtn = driver.findElement(By.id("editBtn"));
         WebElement editedBook = driver.findElement(By.id("editedBook"));
 
@@ -91,16 +100,16 @@ public class SeleniumTest {
         editPriceInput.sendKeys("3000");
         editNumberOfPagesInput.sendKeys("300");
 
-
         editBtn.click();
 
-
-        assertEquals("ISBN: 123, Title: Updated Book", editedBook.getText());
+        assertEquals("Book edited: ID: 123, Title: Updated Book", editedBook.getText());
     }
 
     @Test
+    @Order(5)
     public void testDeleteBook() {
         driver.get(path);
+
         WebElement deleteBookIdInput = driver.findElement(By.id("deleteBookId"));
         WebElement deleteBtn = driver.findElement(By.id("deleteBtn"));
         WebElement deletedBook = driver.findElement(By.id("deletedBook"));
@@ -109,10 +118,7 @@ public class SeleniumTest {
 
         deleteBtn.click();
 
-
         assertEquals("Livro Excluído ISBN: 123", deletedBook.getText());
-
-
     }
 
 }
