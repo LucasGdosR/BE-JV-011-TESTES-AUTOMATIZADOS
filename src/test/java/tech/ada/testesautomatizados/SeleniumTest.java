@@ -25,23 +25,27 @@ public class SeleniumTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(400));
     }
 
-//    @AfterEach
-//    public void tearDown() {
-//        driver.quit();
-//    }
+    @AfterEach
+    public void tearDown() {
+        driver.quit();
+    }
+
     @Test
     @Order(2)
-    public void testListAllBooks() {
+    public void testListAllBooks() throws InterruptedException {
         driver.get(path);
 
         WebElement table = driver.findElement(By.id("bookTable"));
+
+        Thread.sleep(500);
+
         // Assert the table contains the expected number of rows and columns
         assertEquals(2, table.findElements(By.tagName("tr")).size());
     }
 
     @Test
     @Order(3)
-    public void testFindBookById() {
+    public void testFindBookById() throws InterruptedException {
         driver.get(path);
 
         WebElement bookIdInput = driver.findElement(By.id("bookId"));
@@ -51,12 +55,14 @@ public class SeleniumTest {
         bookIdInput.sendKeys("123");
         findByIdBtn.click();
 
+        Thread.sleep(500);
+
         assertEquals("ISBN: 123, Title: book test", foundBook.getText());
     }
 
     @Test
     @Order(1)
-    public void testSaveBook() {
+    public void testSaveBook() throws InterruptedException {
         driver.get(path);
 
         WebElement isbnInput = driver.findElement(By.id("isbn"));
@@ -76,12 +82,14 @@ public class SeleniumTest {
 
         saveBtn.click();
 
+        Thread.sleep(500);
+
         assertEquals("Livro adicionado", savedBook.getText());
     }
 
     @Test
     @Order(4)
-    public void testEditBook() {
+    public void testEditBook() throws InterruptedException {
         driver.get(path);
 
         WebElement editIsbnInput = driver.findElement(By.id("editIsbn"));
@@ -102,12 +110,14 @@ public class SeleniumTest {
 
         editBtn.click();
 
+        Thread.sleep(500);
+
         assertEquals("Book edited: ID: 123, Title: Updated Book", editedBook.getText());
     }
 
     @Test
     @Order(5)
-    public void testDeleteBook() {
+    public void testDeleteBook() throws InterruptedException {
         driver.get(path);
 
         WebElement deleteBookIdInput = driver.findElement(By.id("deleteBookId"));
@@ -117,6 +127,8 @@ public class SeleniumTest {
         deleteBookIdInput.sendKeys("123");
 
         deleteBtn.click();
+
+        Thread.sleep(500);
 
         assertEquals("Livro Excluído ISBN: 123", deletedBook.getText());
     }
